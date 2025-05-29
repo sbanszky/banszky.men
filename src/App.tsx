@@ -5,11 +5,13 @@ import { SingleIpDisplay } from './components/SingleIpDisplay';
 import { Terminal } from 'lucide-react';
 import { FloatingIcons } from './components/FloatingIcons';
 import { Ipv6Matrix } from './components/Ipv6Matrix';
-import { NeuralNetwork } from './components/NeuralNetwork';
+import { GlobalInternet } from './components/GlobalInternet';
+import { RainbowExplosion } from './components/RainbowExplosion';
 
 function App() {
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
   const [isHovering, setIsHovering] = useState(false);
+  const [showEthicalHacker, setShowEthicalHacker] = useState(true);
   const email = 's@banszky.men';
 
   useEffect(() => {
@@ -26,12 +28,21 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowEthicalHacker(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-black text-[#00FF41] overflow-hidden">
-      <NeuralNetwork />
+      <GlobalInternet />
       <IpMatrix />
       <Ipv6Matrix />
       <FloatingIcons />
+      <RainbowExplosion trigger={!showEthicalHacker} />
       
       {!isLandscape && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
@@ -47,9 +58,11 @@ function App() {
             Welcome!<br />
             This site is a fusion of AI and nearly 20 years of network engineering experience. Explore the ideas, tools, and experiments born from this unique collaboration.
           </p>
-          <p className="tagline text-sm md:text-base font-mono mt-4 opacity-80">
-            It's me, reimagined by AI.
-          </p>
+          {showEthicalHacker && (
+            <p className="tagline text-sm md:text-base font-mono mt-4 opacity-80">
+              It's me, reimagined by AI.
+            </p>
+          )}
           <a 
             href="https://subnetting.online"
             target="_blank"

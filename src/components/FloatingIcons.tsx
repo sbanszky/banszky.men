@@ -5,20 +5,34 @@ interface FloatingIcon {
   y: number;
   opacity: number;
   scale: number;
-  type: 'star' | 'whitestar';
+  type: 'star' | 'hat';
   vibrationOffset: number;
   vibrationSpeed: number;
-  corners: number;
+}
+
+interface TextAnimation {
+  visible: boolean;
+  opacity: number;
+  x: number;
+  y: number;
+  type: 'hacker' | 'ai';
 }
 
 export const FloatingIcons = () => {
   const [icon, setIcon] = useState<FloatingIcon | null>(null);
+  const [textAnim, setTextAnim] = useState<TextAnimation>({
+    visible: false,
+    opacity: 0,
+    x: 0,
+    y: 0,
+    type: 'hacker'
+  });
 
   useEffect(() => {
     const createNewIcon = () => {
       const x = Math.random() * window.innerWidth;
       const y = Math.random() * window.innerHeight;
-      const type = Math.random() < 0.5 ? 'star' : 'whitestar';
+      const type = Math.random() < 0.5 ? 'star' : 'hat';
       
       setIcon({
         x,
@@ -27,8 +41,7 @@ export const FloatingIcons = () => {
         scale: 1,
         type,
         vibrationOffset: Math.random() * Math.PI * 2,
-        vibrationSpeed: 0.5 + Math.random() * 1.5,
-        corners: Math.floor(Math.random() * 7) + 3 // Random between 3 and 9 corners
+        vibrationSpeed: 0.5 + Math.random() * 1.5
       });
 
       setTimeout(() => {
@@ -36,6 +49,22 @@ export const FloatingIcons = () => {
           setIcon(prev => {
             if (!prev || prev.opacity <= 0) {
               clearInterval(fadeInterval);
+              if (prev) {
+                setTextAnim({
+                  visible: true,
+                  opacity: 1,
+                  x: prev.x,
+                  y: prev.y,
+                  type: prev.type === 'hat' ? 'hacker' : 'ai'
+                });
+                
+                setTimeout(() => {
+                  setTextAnim(t => ({ ...t, opacity: 0 }));
+                  setTimeout(() => {
+                    setTextAnim(t => ({ ...t, visible: false }));
+                  }, 500);
+                }, 1000);
+              }
               return null;
             }
             return {
@@ -46,10 +75,6 @@ export const FloatingIcons = () => {
           });
         }, 50);
       }, 7000);
-
-      setTimeout(() => {
-        setIcon(null);
-      }, 9000);
     };
 
     const interval = setInterval(() => {
@@ -77,64 +102,77 @@ export const FloatingIcons = () => {
     };
   }, []);
 
-  if (!icon) return null;
-
   const iconLinks = {
     star: "https://www.credly.com/badges/ba1a0da5-339d-473c-b1f8-4a361c21ff37",
-    whitestar: "https://www.credly.com/badges/9cbf36b1-602c-4255-9588-925259526527"
+    hat: "https://www.credly.com/badges/9cbf36b1-602c-4255-9588-925259526527"
   };
 
-  const vibrationX = Math.sin(icon.vibrationOffset) * 2;
-  const vibrationY = Math.cos(icon.vibrationOffset * 1.3) * 2;
-
-  // Create star shape points
-  const createStarPoints = (cx: number, cy: number, corners: number, outerRadius: number, innerRadius: number) => {
-    let points = '';
-    for (let i = 0; i < corners * 2; i++) {
-      const radius = i % 2 === 0 ? outerRadius : innerRadius;
-      const angle = (Math.PI * i) / corners;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-      points += `${x},${y} `;
-    }
-    return points.trim();
-  };
-
-  const size = 20; // Base size for the star
-  const outerRadius = size / 2;
-  const innerRadius = outerRadius * 0.4;
+  const size = 20;
 
   return (
-    <a
-      href={iconLinks[icon.type]}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="absolute z-20 cursor-pointer"
-      style={{
-        left: icon.x + vibrationX,
-        top: icon.y + vibrationY,
-        transform: `translate(-50%, -50%) scale(${icon.scale})`,
-        transition: 'transform 2s ease-out'
-      }}
-    >
-      <svg
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-        className={`${icon.type === 'whitestar' ? 'text-white' : 'text-[#00FF41]'}`}
-        style={{
-          opacity: icon.opacity,
-          transition: 'opacity 2s ease-out, color 0.3s ease',
-          filter: icon.type === 'whitestar' 
-            ? 'drop-shadow(0 0 10px white) drop-shadow(0 0 20px white)'
-            : 'drop-shadow(0 0 10px #00FF41) drop-shadow(0 0 20px #00FF41)'
-        }}
-      >
-        <polygon
-          points={createStarPoints(size/2, size/2, icon.corners, outerRadius, innerRadius)}
-          fill="currentColor"
-        />
-      </svg>
-    </a>
+    <>
+      {icon && (
+        <a
+          href={iconLinks[icon.type]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute z-20 cursor-pointer"
+          style={{
+            left: icon.x + Math.sin(icon.vibrationOffset) * 2,
+            top: icon.y + Math.cos(icon.vibrationOffset * 1.3) * 2,
+            transform: `translate(-50%, -50%) scale(${icon.scale})`,
+            transition: 'transform 2s ease-out'
+          }}
+        >
+          <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            className={`${icon.type === 'hat' ? 'text-white' : 'text-[#00FF41]'}`}
+            style={{
+              opacity: icon.opacity,
+              transition: 'opacity 2s ease-out, color 0.3s ease',
+              filter: icon.type === 'hat' 
+                ? 'drop-shadow(0 0 10px white) drop-shadow(0 0 20px white)'
+                : 'drop-shadow(0 0 10px #00FF41) drop-shadow(0 0 20px #00FF41)'
+            }}
+          >
+            {icon.type === 'star' ? (
+              <polygon
+                points="10,2 4,20 18,8 2,8 16,20"
+                fill="currentColor"
+              />
+            ) : (
+              <path
+                d="M3 14 L8 6 L12 6 L17 14 L3 14"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+              />
+            )}
+          </svg>
+        </a>
+      )}
+
+      {textAnim.visible && (
+        <div
+          className="absolute z-20 font-mono text-sm font-bold"
+          style={{
+            left: textAnim.x,
+            top: textAnim.y,
+            transform: 'translate(-50%, -50%)',
+            opacity: textAnim.opacity,
+            transition: 'opacity 0.5s ease-out',
+            textShadow: textAnim.type === 'hacker' 
+              ? '0 0 10px rgba(255,255,255,0.5)'
+              : '0 0 10px rgba(0,255,65,0.5)',
+            pointerEvents: 'none',
+            color: textAnim.type === 'hacker' ? 'white' : '#00FF41'
+          }}
+        >
+          {textAnim.type === 'hacker' ? 'ethical hacker' : 'AI for Networking'}
+        </div>
+      )}
+    </>
   );
 };
