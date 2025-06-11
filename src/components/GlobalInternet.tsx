@@ -143,6 +143,7 @@ export const GlobalInternet = () => {
       ];
       const target = nodesRef.current[targetIdx];
 
+      // Create laser when packet is sent
       createLaser(sourceIdx, targetIdx);
 
       packetsRef.current.push({
