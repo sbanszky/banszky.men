@@ -5,9 +5,8 @@ import { SingleIpDisplay } from './components/SingleIpDisplay';
 import { Terminal } from 'lucide-react';
 import { FloatingIcons } from './components/FloatingIcons';
 import { Ipv6Matrix } from './components/Ipv6Matrix';
-import { GlobalInternet } from './components/GlobalInternet';
+import { BlueEyeBackground } from './components/BlueEyeBackground';
 import { RainbowExplosion } from './components/RainbowExplosion';
-import { AIBackground } from './components/AIBackground';
 import Header from './components/Header';
 
 function App() {
@@ -31,9 +30,8 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-black text-[#00FF41] overflow-hidden">
-      <AIBackground />
+      <BlueEyeBackground />
       <Header />
-      <GlobalInternet />
       <IpMatrix />
       <Ipv6Matrix />
       <FloatingIcons />
