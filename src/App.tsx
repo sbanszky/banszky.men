@@ -79,7 +79,7 @@ function App() {
           <NetworkStats />
           
           <a 
-            href="https://cloudbase.site" 
+            href="mailto:s@banszky.men" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="mt-8 group"
