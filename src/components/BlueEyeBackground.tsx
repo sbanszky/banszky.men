@@ -1,21 +1,30 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-interface Node {
+interface Synapse {
   x: number;
   y: number;
   dx: number;
   dy: number;
   size: number;
-  connections: number[];
-  intuition: number;
   pulse: number;
-  ruleAdaptation: number;
+  intelligence: number;
+  connections: number[];
+}
+
+interface NeuralPulse {
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
+  progress: number;
+  intensity: number;
+  hue: number;
 }
 
 export const BlueEyeBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const nodesRef = useRef<Node[]>([]);
-  const [rulesVersion, setRulesVersion] = useState(0);
+  const synapsesRef = useRef<Synapse[]>([]);
+  const pulsesRef = useRef<NeuralPulse[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,194 +36,303 @@ export const BlueEyeBackground = () => {
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      initializeNodes();
+      initializeSynapses();
     };
 
-    const initializeNodes = () => {
-      const nodeCount = 40;
-      nodesRef.current = Array.from({ length: nodeCount }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        dx: (Math.random() - 0.5) * 0.5,
-        dy: (Math.random() - 0.5) * 0.5,
-        size: 5 + Math.random() * 5,
-        connections: [],
-        intuition: 0.5 + Math.random() * 0.5,
-        pulse: Math.random() * Math.PI * 2,
-        ruleAdaptation: Math.random()
-      }));
+    const initializeSynapses = () => {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const eyeRadius = Math.min(canvas.width, canvas.height) * 0.35;
 
-      applyDynamicRules();
-    };
+      synapsesRef.current = Array.from({ length: 60 }, (_, i) => {
+        const angle = (i / 60) * Math.PI * 2;
+        const radiusVariation = 0.7 + Math.random() * 0.6;
+        const x = centerX + Math.cos(angle) * eyeRadius * radiusVariation;
+        const y = centerY + Math.sin(angle) * eyeRadius * radiusVariation * 0.8; // Slightly oval
 
-    const applyDynamicRules = () => {
-      nodesRef.current.forEach((node, i) => {
-        // Clear existing connections
-        node.connections = [];
+        return {
+          x,
+          y,
+          dx: (Math.random() - 0.5) * 0.3,
+          dy: (Math.random() - 0.5) * 0.3,
+          size: 2 + Math.random() * 4,
+          pulse: Math.random() * Math.PI * 2,
+          intelligence: 0.3 + Math.random() * 0.7,
+          connections: []
+        };
+      });
 
-        // Apply new connection rules based on current version
-        if (rulesVersion % 2 === 0) {
-          // Rule Set A: Connect based on intuition
-          for (let j = 0; j < nodesRef.current.length; j++) {
-            if (i !== j && Math.random() < node.intuition * 0.5) {
-              node.connections.push(j);
+      // Create intelligent connections
+      synapsesRef.current.forEach((synapse, i) => {
+        const numConnections = Math.floor(synapse.intelligence * 4) + 1;
+        const connections = new Set<number>();
+        
+        while (connections.size < numConnections) {
+          const target = Math.floor(Math.random() * synapsesRef.current.length);
+          if (target !== i) {
+            const distance = Math.hypot(
+              synapse.x - synapsesRef.current[target].x,
+              synapse.y - synapsesRef.current[target].y
+            );
+            if (distance < 200) {
+              connections.add(target);
             }
           }
-        } else {
-          // Rule Set B: Connect based on proximity and adaptation
-          for (let j = 0; j < nodesRef.current.length; j++) {
-            if (i !== j) {
-              const distance = Math.sqrt(
-                Math.pow(node.x - nodesRef.current[j].x, 2) +
-                Math.pow(node.y - nodesRef.current[j].y, 2)
-              );
-              if (distance < 200 * node.ruleAdaptation) {
-                node.connections.push(j);
-              }
-            }
+        }
+        synapse.connections = Array.from(connections);
+      });
+    };
+
+    const isInsideEye = (x: number, y: number) => {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.4;
+      const eyeRadiusY = eyeRadiusX * 0.7;
+      
+      const normalizedX = (x - centerX) / eyeRadiusX;
+      const normalizedY = (y - centerY) / eyeRadiusY;
+      
+      return (normalizedX * normalizedX + normalizedY * normalizedY) <= 1;
+    };
+
+    const drawEyeStructure = (ctx: CanvasRenderingContext2D, time: number) => {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.4;
+      const eyeRadiusY = eyeRadiusX * 0.7;
+
+      // Outer eye glow
+      const outerGlow = ctx.createRadialGradient(
+        centerX, centerY, eyeRadiusX * 0.5,
+        centerX, centerY, eyeRadiusX * 1.2
+      );
+      outerGlow.addColorStop(0, 'rgba(30, 144, 255, 0.15)');
+      outerGlow.addColorStop(1, 'rgba(30, 144, 255, 0)');
+      
+      ctx.save();
+      ctx.scale(1, eyeRadiusY / eyeRadiusX);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY * (eyeRadiusX / eyeRadiusY), eyeRadiusX * 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = outerGlow;
+      ctx.fill();
+      ctx.restore();
+
+      // Iris with dynamic patterns
+      const irisRadius = eyeRadiusX * 0.6;
+      const iris = ctx.createRadialGradient(
+        centerX, centerY, irisRadius * 0.2,
+        centerX, centerY, irisRadius
+      );
+      
+      const pulseIntensity = 0.8 + Math.sin(time * 0.003) * 0.2;
+      iris.addColorStop(0, `rgba(100, 149, 237, ${pulseIntensity})`);
+      iris.addColorStop(0.3, `rgba(65, 105, 225, ${pulseIntensity * 0.9})`);
+      iris.addColorStop(0.7, `rgba(30, 144, 255, ${pulseIntensity * 0.7})`);
+      iris.addColorStop(1, `rgba(0, 100, 200, ${pulseIntensity * 0.5})`);
+      
+      ctx.save();
+      ctx.scale(1, eyeRadiusY / eyeRadiusX);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY * (eyeRadiusX / eyeRadiusY), irisRadius, 0, Math.PI * 2);
+      ctx.fillStyle = iris;
+      ctx.fill();
+      ctx.restore();
+
+      // Pupil with subtle movement
+      const pupilRadius = irisRadius * 0.3;
+      const pupilOffsetX = Math.sin(time * 0.0008) * 5;
+      const pupilOffsetY = Math.cos(time * 0.0012) * 3;
+      
+      ctx.beginPath();
+      ctx.arc(
+        centerX + pupilOffsetX,
+        centerY + pupilOffsetY,
+        pupilRadius,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = 'rgba(0, 0, 50, 0.95)';
+      ctx.fill();
+
+      // Inner pupil reflection
+      ctx.beginPath();
+      ctx.arc(
+        centerX + pupilOffsetX - pupilRadius * 0.3,
+        centerY + pupilOffsetY - pupilRadius * 0.3,
+        pupilRadius * 0.2,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = 'rgba(150, 200, 255, 0.4)';
+      ctx.fill();
+    };
+
+    const createNeuralPulse = (fromIndex: number, toIndex: number) => {
+      const from = synapsesRef.current[fromIndex];
+      const to = synapsesRef.current[toIndex];
+      
+      pulsesRef.current.push({
+        x: from.x,
+        y: from.y,
+        targetX: to.x,
+        targetY: to.y,
+        progress: 0,
+        intensity: 0.5 + Math.random() * 0.5,
+        hue: 200 + Math.random() * 60
+      });
+    };
+
+    const updateSynapses = (time: number) => {
+      synapsesRef.current.forEach((synapse, i) => {
+        // Update pulse
+        synapse.pulse += 0.03;
+        
+        // Gentle movement
+        synapse.x += synapse.dx;
+        synapse.y += synapse.dy;
+        
+        // Keep synapses within eye boundary
+        if (!isInsideEye(synapse.x, synapse.y)) {
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          const angle = Math.atan2(synapse.y - centerY, synapse.x - centerX);
+          const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.35;
+          const eyeRadiusY = eyeRadiusX * 0.7;
+          
+          synapse.x = centerX + Math.cos(angle) * eyeRadiusX * 0.9;
+          synapse.y = centerY + Math.sin(angle) * eyeRadiusY * 0.9;
+          synapse.dx *= -0.5;
+          synapse.dy *= -0.5;
+        }
+
+        // Create neural pulses occasionally
+        if (Math.random() < synapse.intelligence * 0.02) {
+          if (synapse.connections.length > 0) {
+            const targetIndex = synapse.connections[
+              Math.floor(Math.random() * synapse.connections.length)
+            ];
+            createNeuralPulse(i, targetIndex);
           }
         }
       });
     };
 
-    const getEyeBoundary = (angle: number) => {
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.4;
-      const variation = Math.sin(angle * 3) * 20;
-      return {
-        x: centerX + Math.cos(angle) * (baseRadius + variation),
-        y: centerY + Math.sin(angle) * (baseRadius + variation)
-      };
+    const updatePulses = () => {
+      pulsesRef.current = pulsesRef.current
+        .map(pulse => ({
+          ...pulse,
+          progress: pulse.progress + 0.02,
+          x: pulse.x + (pulse.targetX - pulse.x) * 0.02,
+          y: pulse.y + (pulse.targetY - pulse.y) * 0.02
+        }))
+        .filter(pulse => pulse.progress < 1);
     };
 
-    const drawEye = (ctx: CanvasRenderingContext2D, time: number) => {
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const eyeSize = Math.min(canvas.width, canvas.height) * 0.8;
-
-      // Outer glow
-      const outerGlow = ctx.createRadialGradient(
-        centerX, centerY, eyeSize * 0.3,
-        centerX, centerY, eyeSize
-      );
-      outerGlow.addColorStop(0, 'rgba(0, 100, 255, 0.3)');
-      outerGlow.addColorStop(1, 'rgba(0, 100, 255, 0)');
-      
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, eyeSize, 0, Math.PI * 2);
-      ctx.fillStyle = outerGlow;
-      ctx.fill();
-
-      // Iris with pulsating effect
-      const irisSize = eyeSize * 0.4 * (0.95 + Math.sin(time * 0.002) * 0.05);
-      const iris = ctx.createRadialGradient(
-        centerX, centerY, irisSize * 0.2,
-        centerX, centerY, irisSize
-      );
-      iris.addColorStop(0, `rgba(0, 150, 255, ${0.8 + Math.sin(time * 0.003) * 0.1})`);
-      iris.addColorStop(1, `rgba(0, 50, 150, ${0.8 + Math.cos(time * 0.003) * 0.1})`);
-      
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, irisSize, 0, Math.PI * 2);
-      ctx.fillStyle = iris;
-      ctx.fill();
-
-      // Pupil with subtle movement
-      const pupilOffsetX = Math.sin(time * 0.001) * 3;
-      const pupilOffsetY = Math.cos(time * 0.0015) * 3;
-      ctx.beginPath();
-      ctx.arc(
-        centerX + pupilOffsetX,
-        centerY + pupilOffsetY,
-        irisSize * 0.25,
-        0,
-        Math.PI * 2
-      );
-      ctx.fillStyle = 'rgba(0, 0, 50, 0.9)';
-      ctx.fill();
-    };
-
-    const drawLaserConnections = (ctx: CanvasRenderingContext2D, time: number) => {
-      nodesRef.current.forEach((node, i) => {
-        node.connections.forEach(j => {
-          const target = nodesRef.current[j];
-          const distance = Math.sqrt(
-            Math.pow(node.x - target.x, 2) + 
-            Math.pow(node.y - target.y, 2)
-          );
-
-          if (distance < 300) {
-            const gradient = ctx.createLinearGradient(node.x, node.y, target.x, target.y);
-            gradient.addColorStop(0, `rgba(0, 150, 255, ${0.3 + 0.2 * Math.sin(time * 0.01 + node.pulse)})`);
-            gradient.addColorStop(1, `rgba(0, 200, 255, ${0.3 + 0.2 * Math.cos(time * 0.01 + node.pulse)})`);
+    const drawConnections = (ctx: CanvasRenderingContext2D, time: number) => {
+      synapsesRef.current.forEach((synapse, i) => {
+        synapse.connections.forEach(targetIndex => {
+          const target = synapsesRef.current[targetIndex];
+          const distance = Math.hypot(target.x - synapse.x, target.y - synapse.y);
+          
+          if (distance < 150) {
+            const connectionStrength = (synapse.intelligence + target.intelligence) * 0.5;
+            const alpha = (1 - distance / 150) * connectionStrength * 0.15;
+            
+            const gradient = ctx.createLinearGradient(
+              synapse.x, synapse.y, target.x, target.y
+            );
+            gradient.addColorStop(0, `rgba(100, 149, 237, ${alpha})`);
+            gradient.addColorStop(1, `rgba(30, 144, 255, ${alpha})`);
 
             ctx.beginPath();
-            ctx.moveTo(node.x, node.y);
-            ctx.lineTo(target.x, target.y);
+            ctx.moveTo(synapse.x, synapse.y);
+            
+            // Add subtle curve to connections
+            const midX = (synapse.x + target.x) / 2;
+            const midY = (synapse.y + target.y) / 2;
+            const curve = Math.sin(time * 0.001 + i) * 10;
+            ctx.quadraticCurveTo(midX + curve, midY - curve, target.x, target.y);
+            
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 1 + Math.sin(time * 0.01 + node.pulse) * 0.5;
+            ctx.lineWidth = 0.5 + connectionStrength;
             ctx.stroke();
           }
         });
       });
     };
 
-    const updateNodes = () => {
-      nodesRef.current.forEach(node => {
-        // Update position
-        node.x += node.dx;
-        node.y += node.dy;
-        node.pulse += 0.02;
-
-        // Calculate angle and distance from center
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const angle = Math.atan2(node.y - centerY, node.x - centerX);
-        const boundary = getEyeBoundary(angle);
-        const distToBoundary = Math.sqrt(
-          Math.pow(node.x - boundary.x, 2) + 
-          Math.pow(node.y - boundary.y, 2)
+    const drawSynapses = (ctx: CanvasRenderingContext2D, time: number) => {
+      synapsesRef.current.forEach(synapse => {
+        const activity = 0.5 + Math.sin(time * 0.002 + synapse.pulse) * 0.5;
+        const glowSize = synapse.size * 3;
+        
+        // Synapse glow
+        const glow = ctx.createRadialGradient(
+          synapse.x, synapse.y, 0,
+          synapse.x, synapse.y, glowSize
         );
+        glow.addColorStop(0, `rgba(100, 149, 237, ${activity * synapse.intelligence * 0.4})`);
+        glow.addColorStop(1, 'rgba(100, 149, 237, 0)');
+        
+        ctx.beginPath();
+        ctx.arc(synapse.x, synapse.y, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
 
-        // Push node back if it tries to escape the eye
-        if (distToBoundary < 10) {
-          const pushAngle = Math.atan2(node.y - boundary.y, node.x - boundary.x);
-          node.dx = Math.cos(pushAngle) * 0.5;
-          node.dy = Math.sin(pushAngle) * 0.5;
-        }
+        // Synapse core
+        ctx.beginPath();
+        ctx.arc(synapse.x, synapse.y, synapse.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 149, 237, ${activity * synapse.intelligence})`;
+        ctx.fill();
+      });
+    };
+
+    const drawPulses = (ctx: CanvasRenderingContext2D) => {
+      pulsesRef.current.forEach(pulse => {
+        const size = 3 + pulse.intensity * 2;
+        const alpha = (1 - pulse.progress) * pulse.intensity;
+        
+        ctx.beginPath();
+        ctx.arc(pulse.x, pulse.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${pulse.hue}, 80%, 60%, ${alpha})`;
+        ctx.fill();
+        
+        // Pulse trail
+        ctx.beginPath();
+        ctx.arc(pulse.x, pulse.y, size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${pulse.hue}, 80%, 60%, ${alpha * 0.3})`;
+        ctx.fill();
       });
     };
 
     const animate = (time: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      drawEye(ctx, time);
-      updateNodes();
-      drawLaserConnections(ctx, time);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Change rules periodically
-      if (time % 10000 < 16) {
-        setRulesVersion(prev => prev + 1);
-        applyDynamicRules();
-      }
+      drawEyeStructure(ctx, time);
+      updateSynapses(time);
+      updatePulses();
+      drawConnections(ctx, time);
+      drawSynapses(ctx, time);
+      drawPulses(ctx);
 
       requestAnimationFrame(animate);
     };
 
     resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
     const animation = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animation);
       window.removeEventListener('resize', resizeCanvas);
     };
-  }, [rulesVersion]);
+  }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none"
+      className="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none"
       style={{ zIndex: -1 }}
     />
   );
