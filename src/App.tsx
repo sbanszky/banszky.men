@@ -81,8 +81,13 @@ function App() {
                 <div className="relative">
                   <div className="w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
                                 bg-black/50 backdrop-blur-sm transition-all duration-300
-                                group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                group-hover:shadow-[#00FF41]/20">
+                               group-hover:shadow-lg group-hover:shadow-[#00FF41]/20"
+                       style={{
+                         borderColor: isHovering ? 'transparent' : '#00FF41',
+                         background: isHovering ? 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #0080ff, #8000ff)' : 'rgba(0, 0, 0, 0.5)',
+                         backgroundSize: isHovering ? '400% 400%' : 'auto',
+                         animation: isHovering ? 'rainbow-flow 1s linear infinite' : 'none'
+                       }}>
                     <div className={`text-3xl font-mono font-bold text-[#00FF41] 
                                    flex items-center justify-center w-full h-full
                                    transition-all duration-500 transform
@@ -154,8 +159,13 @@ function App() {
                 <div className="relative">
                   <div className="w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
                                 bg-black/50 backdrop-blur-sm transition-all duration-300
-                                group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                group-hover:shadow-[#00FF41]/20">
+                               group-hover:shadow-lg group-hover:shadow-[#00FF41]/20"
+                       style={{
+                         borderColor: isHovering ? 'transparent' : '#00FF41',
+                         background: isHovering ? 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #0080ff, #8000ff)' : 'rgba(0, 0, 0, 0.5)',
+                         backgroundSize: isHovering ? '400% 400%' : 'auto',
+                         animation: isHovering ? 'rainbow-flow 1s linear infinite' : 'none'
+                       }}>
                     <div className={`text-4xl font-mono font-bold text-[#00FF41] 
                                    flex items-center justify-center w-full h-full
                                    transition-all duration-500 transform
