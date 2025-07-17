@@ -54,7 +54,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors"
+                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors z-50"
               >
                 Master the art of subnetting
               </a>
@@ -72,44 +72,46 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <a 
-                href="https://bluecv.banszky.men" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="mt-6 group relative"
-                onMouseEnter={() => {
-                  setIsHovering(true);
-                  setShowRainbow(true);
-                }}
-                onMouseLeave={() => {
-                  setIsHovering(false);
-                  setShowRainbow(false);
-                }}
-              >
-                <div className="relative">
-                  <div className="w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                                bg-black/50 backdrop-blur-sm transition-all duration-300
-                                group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                group-hover:shadow-[#00FF41]/20">
-                    <div className={`text-3xl font-mono font-bold text-[#00FF41] 
-                                   flex items-center justify-center w-full h-full
-                                   transition-all duration-500 transform
-                                   ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
-                      ?
-                    </div>
-                    <div className={`absolute inset-0 text-3xl font-mono font-bold text-[#00FF41]
-                                    flex items-center justify-center transform transition-all duration-500
-                                    ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
-                      ?
+              <div className="mt-6 group relative z-50">
+                <a 
+                  href="https://bluecv.banszky.men" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="block"
+                  onMouseEnter={() => {
+                    setIsHovering(true);
+                    setShowRainbow(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsHovering(false);
+                    setShowRainbow(false);
+                  }}
+                >
+                  <div className="relative">
+                    <div className="w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
+                                  bg-black/50 backdrop-blur-sm transition-all duration-300
+                                  group-hover:border-[#00FF41]/80 group-hover:shadow-lg
+                                  group-hover:shadow-[#00FF41]/20">
+                      <div className={`text-3xl font-mono font-bold text-[#00FF41] 
+                                     flex items-center justify-center w-full h-full
+                                     transition-all duration-500 transform
+                                     ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
+                        ?
+                      </div>
+                      <div className={`absolute inset-0 text-3xl font-mono font-bold text-[#00FF41]
+                                      flex items-center justify-center transform transition-all duration-500
+                                      ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
+                        ?
+                      </div>
                     </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
             </div>
 
-            <div className="fixed bottom-4 left-0 w-full text-center px-4">
+            <div className="fixed bottom-4 left-0 w-full text-center px-4 z-50">
               <p className="text-[#00FF41]/70 text-xs font-mono tracking-wider mb-1">
-                Contact: <span className="rainbow-text">{email}</span>
+                Contact: <a href={`mailto:${email}`} className="rainbow-text">{email}</a>
               </p>
               <p className="text-[#00FF41]/70 text-xs font-mono tracking-wider">
                 System Status: Operational | Last Update: {new Date().toLocaleTimeString()}
@@ -135,7 +137,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors"
+                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors z-50"
               >
                 Master the art of subnetting
               </a>
@@ -153,44 +155,46 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <a 
-                href="https://bluecv.banszky.men" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="mt-8 group relative"
-                onMouseEnter={() => {
-                  setIsHovering(true);
-                  setShowRainbow(true);
-                }}
-                onMouseLeave={() => {
-                  setIsHovering(false);
-                  setShowRainbow(false);
-                }}
-              >
-                <div className="relative">
-                  <div className="w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                                bg-black/50 backdrop-blur-sm transition-all duration-300
-                                group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                group-hover:shadow-[#00FF41]/20">
-                    <div className={`text-4xl font-mono font-bold text-[#00FF41] 
-                                   flex items-center justify-center w-full h-full
-                                   transition-all duration-500 transform
-                                   ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
-                      ?
-                    </div>
-                    <div className={`absolute inset-0 text-4xl font-mono font-bold text-[#00FF41]
-                                    flex items-center justify-center transform transition-all duration-500
-                                    ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
-                      ?
+              <div className="mt-8 group relative z-50">
+                <a 
+                  href="https://bluecv.banszky.men" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="block"
+                  onMouseEnter={() => {
+                    setIsHovering(true);
+                    setShowRainbow(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsHovering(false);
+                    setShowRainbow(false);
+                  }}
+                >
+                  <div className="relative">
+                    <div className="w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
+                                  bg-black/50 backdrop-blur-sm transition-all duration-300
+                                  group-hover:border-[#00FF41]/80 group-hover:shadow-lg
+                                  group-hover:shadow-[#00FF41]/20">
+                      <div className={`text-4xl font-mono font-bold text-[#00FF41] 
+                                     flex items-center justify-center w-full h-full
+                                     transition-all duration-500 transform
+                                     ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
+                        ?
+                      </div>
+                      <div className={`absolute inset-0 text-4xl font-mono font-bold text-[#00FF41]
+                                      flex items-center justify-center transform transition-all duration-500
+                                      ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
+                        ?
+                      </div>
                     </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
             </div>
 
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center w-full px-4 z-50">
               <p className="text-[#00FF41]/70 text-sm font-mono tracking-wider mb-2">
-                Contact: <span className="rainbow-text">{email}</span>
+                Contact: <a href={`mailto:${email}`} className="rainbow-text">{email}</a>
               </p>
               <p className="text-[#00FF41]/70 text-sm font-mono tracking-wider">
                 System Status: Operational | Last Update: {new Date().toLocaleTimeString()}
@@ -200,7 +204,7 @@ function App() {
         )}
       </div>
 
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/20 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/40" />
     </div>
   );
 }
