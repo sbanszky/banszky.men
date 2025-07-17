@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IpMatrix } from './components/IpMatrix';
-import { NetworkStats } from './components/NetworkStats';
+import NetworkStats from './components/NetworkStats';
 import { SingleIpDisplay } from './components/SingleIpDisplay';
 import { Terminal } from 'lucide-react';
 import { FloatingIcons } from './components/FloatingIcons';
