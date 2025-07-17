@@ -50,14 +50,6 @@ function App() {
               <p className="tagline text-sm font-mono mt-2 opacity-80">
                 It's me, reimagined by AI.
               </p>
-              <a 
-                href="https://subnetting.online"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors"
-              >
-                Master the art of subnetting
-              </a>
             </div>
 
             <div className="flex flex-col items-center space-y-4 backdrop-blur-sm p-6 rounded-xl w-full max-w-md mx-auto">
@@ -131,14 +123,6 @@ function App() {
               <p className="tagline text-base font-mono mt-4 opacity-80">
                 It's me, reimagined by AI.
               </p>
-              <a 
-                href="https://subnetting.online"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors"
-              >
-                Master the art of subnetting
-              </a>
             </div>
 
             <div className="flex flex-col items-center space-y-4 backdrop-blur-sm p-8 rounded-xl w-full max-w-md mx-auto">
