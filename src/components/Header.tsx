@@ -9,14 +9,21 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="fixed top-8 left-0 w-full z-[9999] text-center pointer-events-none">
+    <div className="fixed top-4 left-0 w-full z-[9999] text-center pointer-events-none px-4">
       <div
-        className={`text-xl font-mono transition-all duration-1000 ${
+        className={`text-sm md:text-base font-mono transition-all duration-1000 ${
           showHeader ? 'opacity-100' : 'opacity-0 translate-y-10'
         }`}
       >
-        <span className="text-[#00FF41]">best networking rule </span>
-        <span className="rainbow-text">"There is no rule against the rule to change the rules."</span>
+        <a 
+          href="https://subnetting.online" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#00FF41] transition-colors duration-300 pointer-events-auto"
+        >
+          Master the art of subnetting
+        </a>
+        <span className="text-[#00FF41]"> "There is no rule against the rule to change the rules."</span>
       </div>
     </div>
   );
