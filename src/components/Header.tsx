@@ -15,15 +15,8 @@ const Header = () => {
           showHeader ? 'opacity-100' : 'opacity-0 translate-y-10'
         }`}
       >
-        <a 
-          href="https://subnetting.online" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-[#00FF41] transition-colors duration-300 pointer-events-auto"
-        >
-          Master the art of subnetting
-        </a>
-        <span className="text-[#00FF41]"> "There is no rule against the rule to change the rules."</span>
+        <span className="text-[#00FF41]">best networking rule </span>
+        <span className="rainbow-text">"There is no rule against the rule to change the rules."</span>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IpMatrix } from './components/IpMatrix';
-import NetworkStats from './components/NetworkStats';
+import { NetworkStats } from './components/NetworkStats';
 import { SingleIpDisplay } from './components/SingleIpDisplay';
 import { Terminal } from 'lucide-react';
 import { FloatingIcons } from './components/FloatingIcons';
@@ -50,23 +50,18 @@ function App() {
               <p className="tagline text-sm font-mono mt-2 opacity-80">
                 It's me, reimagined by AI.
               </p>
+              <a 
+                href="https://subnetting.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors"
+              >
+                Master the art of subnetting
+              </a>
             </div>
 
             <div className="flex flex-col items-center space-y-4 backdrop-blur-sm p-6 rounded-xl w-full max-w-md mx-auto">
               <div className="flex flex-col items-center mb-4">
-                <a 
-                  href="https://subnetting.online" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="mb-4 text-center group"
-                >
-                  <div className="text-lg font-mono font-bold tracking-wider transition-all duration-300 group-hover:scale-105">
-                    <span className="bg-gradient-to-r from-green-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-                      Master the art of subnetting
-                    </span>
-                  </div>
-                </a>
-                
                 <div className="flex items-center space-x-2">
                   <Terminal className="w-6 h-6" />
                   <h1 className="text-xl font-mono font-bold tracking-wider">
@@ -136,23 +131,18 @@ function App() {
               <p className="tagline text-base font-mono mt-4 opacity-80">
                 It's me, reimagined by AI.
               </p>
+              <a 
+                href="https://subnetting.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors"
+              >
+                Master the art of subnetting
+              </a>
             </div>
 
             <div className="flex flex-col items-center space-y-4 backdrop-blur-sm p-8 rounded-xl w-full max-w-md mx-auto">
               <div className="flex flex-col items-center mb-4">
-                <a 
-                  href="https://subnetting.online" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="mb-6 text-center group"
-                >
-                  <div className="text-xl font-mono font-bold tracking-wider transition-all duration-300 group-hover:scale-105">
-                    <span className="bg-gradient-to-r from-green-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-                      Master the art of subnetting
-                    </span>
-                  </div>
-                </a>
-                
                 <div className="flex items-center space-x-3">
                   <Terminal className="w-8 h-8" />
                   <h1 className="text-3xl font-mono font-bold tracking-wider">
