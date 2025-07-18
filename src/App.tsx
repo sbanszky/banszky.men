@@ -77,7 +77,7 @@ function App() {
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer relative z-[101]"
+                  className="block pointer-events-auto cursor-pointer relative z-[9999] bg-transparent"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -87,7 +87,7 @@ function App() {
                     setShowRainbow(false);
                   }}
                 >
-                  <div className="relative">
+                  <div className="relative z-[9999]">
                     <div className="w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
                                   bg-black/50 backdrop-blur-sm transition-all duration-300
                                   group-hover:border-[#00FF41]/80 group-hover:shadow-lg
@@ -160,7 +160,7 @@ function App() {
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer relative z-[101]"
+                  className="block pointer-events-auto cursor-pointer relative z-[9999] bg-transparent"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -170,7 +170,7 @@ function App() {
                     setShowRainbow(false);
                   }}
                 >
-                  <div className="relative">
+                  <div className="relative z-[9999]">
                     <div className="w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
                                   bg-black/50 backdrop-blur-sm transition-all duration-300
                                   group-hover:border-[#00FF41]/80 group-hover:shadow-lg
