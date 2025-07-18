@@ -116,7 +116,7 @@ export const FloatingIcons = () => {
           href={iconLinks[icon.type]}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute z-20 cursor-pointer"
+          className="fixed z-20 cursor-pointer"
           style={{
             left: icon.x + Math.sin(icon.vibrationOffset) * 2,
             top: icon.y + Math.cos(icon.vibrationOffset * 1.3) * 2,
@@ -156,7 +156,7 @@ export const FloatingIcons = () => {
 
       {textAnim.visible && (
         <div
-          className="absolute z-20 font-mono text-sm font-bold"
+          className="fixed z-20 font-mono text-sm font-bold pointer-events-none"
           style={{
             left: textAnim.x,
             top: textAnim.y,

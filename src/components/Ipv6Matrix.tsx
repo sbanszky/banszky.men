@@ -97,7 +97,7 @@ export const Ipv6Matrix = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full opacity-15"
+      className="fixed top-0 left-0 w-full h-full opacity-15 pointer-events-none"
       style={{ zIndex: 2 }}
     />
   );

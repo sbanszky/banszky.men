@@ -31,17 +31,18 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-black text-[#00FF41] overflow-hidden">
+      {/* Background layers - all with pointer-events-none */}
       <BlueEyeBackground />
+      <IpMatrix />
+      <Ipv6Matrix />
+      <FloatingIcons />
+      <RainbowExplosion trigger={showRainbow} />
+      
       <Header />
       
       <div className="relative z-10 min-h-screen flex flex-col items-center pt-24 px-4 pb-20 space-y-6">
         {!isLandscape ? (
           <>
-            <IpMatrix />
-            <Ipv6Matrix />
-            <FloatingIcons />
-            <RainbowExplosion trigger={showRainbow} />
-            
             <div className="welcome-text text-center mb-8 px-4 w-full">
               <p className="text-lg font-mono leading-relaxed">
                 Welcome!<br />
@@ -54,7 +55,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors relative z-[100] pointer-events-auto cursor-pointer"
+                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors relative z-[9999] pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -72,30 +73,27 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-6 group relative z-[9999]">
-                <a 
-                  href="https://bluecv.banszky.men" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer bg-transparent relative z-[9999] 
-                           w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                           bg-black/50 backdrop-blur-sm transition-all duration-300
-                           hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
-                           flex items-center justify-center"
-                  onMouseEnter={() => {
-                    setIsHovering(true);
-                    setShowRainbow(true);
-                  }}
-                  onMouseLeave={() => {
-                    setIsHovering(false);
-                    setShowRainbow(false);
-                  }}
-                >
-                  <span className="text-3xl font-mono font-bold text-[#00FF41] pointer-events-none">
-                    ?
-                  </span>
-                </a>
-              </div>
+              <a 
+                href="https://bluecv.banszky.men" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-6 block w-14 h-14 border-2 border-[#00FF41] rounded-lg
+                         bg-black/50 backdrop-blur-sm transition-all duration-300
+                         hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
+                         flex items-center justify-center text-3xl font-mono font-bold text-[#00FF41]
+                         relative cursor-pointer"
+                style={{ zIndex: 99999 }}
+                onMouseEnter={() => {
+                  setIsHovering(true);
+                  setShowRainbow(true);
+                }}
+                onMouseLeave={() => {
+                  setIsHovering(false);
+                  setShowRainbow(false);
+                }}
+              >
+                ?
+              </a>
             </div>
 
             <div className="fixed bottom-4 left-0 w-full text-center px-4 z-50">
@@ -109,11 +107,6 @@ function App() {
           </>
         ) : (
           <>
-            <IpMatrix />
-            <Ipv6Matrix />
-            <FloatingIcons />
-            <RainbowExplosion trigger={showRainbow} />
-            
             <div className="welcome-text text-center mb-8 px-4 max-w-2xl">
               <p className="text-xl lg:text-2xl font-mono leading-relaxed">
                 Welcome!<br />
@@ -126,7 +119,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors relative z-[100] pointer-events-auto cursor-pointer"
+                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors relative z-[9999] pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -144,30 +137,27 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-8 group relative z-[9999]">
-                <a 
-                  href="https://bluecv.banszky.men" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer bg-transparent relative z-[9999]
-                           w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                           bg-black/50 backdrop-blur-sm transition-all duration-300
-                           hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
-                           flex items-center justify-center"
-                  onMouseEnter={() => {
-                    setIsHovering(true);
-                    setShowRainbow(true);
-                  }}
-                  onMouseLeave={() => {
-                    setIsHovering(false);
-                    setShowRainbow(false);
-                  }}
-                >
-                  <span className="text-4xl font-mono font-bold text-[#00FF41] pointer-events-none">
-                    ?
-                  </span>
-                </a>
-              </div>
+              <a 
+                href="https://bluecv.banszky.men" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-8 block w-16 h-16 border-2 border-[#00FF41] rounded-lg
+                         bg-black/50 backdrop-blur-sm transition-all duration-300
+                         hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
+                         flex items-center justify-center text-4xl font-mono font-bold text-[#00FF41]
+                         relative cursor-pointer"
+                style={{ zIndex: 99999 }}
+                onMouseEnter={() => {
+                  setIsHovering(true);
+                  setShowRainbow(true);
+                }}
+                onMouseLeave={() => {
+                  setIsHovering(false);
+                  setShowRainbow(false);
+                }}
+              >
+                ?
+              </a>
             </div>
 
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center w-full px-4 z-50">

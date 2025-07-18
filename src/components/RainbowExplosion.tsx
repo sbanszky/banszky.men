@@ -98,7 +98,7 @@ export const RainbowExplosion = ({ trigger }: { trigger: boolean }) => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full pointer-events-none"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none"
       style={{ zIndex: 9999 }}
     />
   );
