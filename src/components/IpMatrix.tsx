@@ -8,7 +8,8 @@ export const IpMatrix = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full opacity-40"
+      className="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none"
+      style={{ zIndex: 3 }}
     />
   );
 };

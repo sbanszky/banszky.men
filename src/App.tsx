@@ -54,7 +54,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors z-50 pointer-events-auto cursor-pointer"
+                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors relative z-[100] pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -72,12 +72,12 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-6 group relative z-50">
+              <div className="mt-6 group relative z-[100]">
                 <a 
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer"
+                  className="block pointer-events-auto cursor-pointer relative z-[101]"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -137,7 +137,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors z-50 pointer-events-auto cursor-pointer"
+                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors relative z-[100] pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -155,12 +155,12 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-8 group relative z-50">
+              <div className="mt-8 group relative z-[100]">
                 <a 
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer"
+                  className="block pointer-events-auto cursor-pointer relative z-[101]"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
