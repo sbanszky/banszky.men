@@ -54,7 +54,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors z-50"
+                className="subnetting-text text-sm font-mono mt-2 block hover:text-[#00FF41]/80 transition-colors z-50 pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -77,7 +77,7 @@ function App() {
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block"
+                  className="block pointer-events-auto cursor-pointer"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -137,7 +137,7 @@ function App() {
                 href="https://subnetting.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors z-50"
+                className="subnetting-text text-base font-mono mt-4 block hover:text-[#00FF41]/80 transition-colors z-50 pointer-events-auto cursor-pointer"
               >
                 Master the art of subnetting
               </a>
@@ -160,7 +160,7 @@ function App() {
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block"
+                  className="block pointer-events-auto cursor-pointer"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
