@@ -72,12 +72,16 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-6 group relative z-[100]">
+              <div className="mt-6 group relative z-[9999]">
                 <a 
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer relative z-[9999] bg-transparent"
+                  className="block pointer-events-auto cursor-pointer bg-transparent relative z-[9999] 
+                           w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
+                           bg-black/50 backdrop-blur-sm transition-all duration-300
+                           hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
+                           flex items-center justify-center"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -87,24 +91,9 @@ function App() {
                     setShowRainbow(false);
                   }}
                 >
-                  <div className="relative z-[9999]">
-                    <div className="w-14 h-14 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                                  bg-black/50 backdrop-blur-sm transition-all duration-300
-                                  group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                  group-hover:shadow-[#00FF41]/20">
-                      <div className={`text-3xl font-mono font-bold text-[#00FF41] 
-                                     flex items-center justify-center w-full h-full
-                                     transition-all duration-500 transform
-                                     ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
-                        ?
-                      </div>
-                      <div className={`absolute inset-0 text-3xl font-mono font-bold text-[#00FF41]
-                                      flex items-center justify-center transform transition-all duration-500
-                                      ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
-                        ?
-                      </div>
-                    </div>
-                  </div>
+                  <span className="text-3xl font-mono font-bold text-[#00FF41] pointer-events-none">
+                    ?
+                  </span>
                 </a>
               </div>
             </div>
@@ -155,12 +144,16 @@ function App() {
               <SingleIpDisplay />
               <NetworkStats />
               
-              <div className="mt-8 group relative z-[100]">
+              <div className="mt-8 group relative z-[9999]">
                 <a 
                   href="https://bluecv.banszky.men" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="block pointer-events-auto cursor-pointer relative z-[9999] bg-transparent"
+                  className="block pointer-events-auto cursor-pointer bg-transparent relative z-[9999]
+                           w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
+                           bg-black/50 backdrop-blur-sm transition-all duration-300
+                           hover:border-[#00FF41]/80 hover:shadow-lg hover:shadow-[#00FF41]/20
+                           flex items-center justify-center"
                   onMouseEnter={() => {
                     setIsHovering(true);
                     setShowRainbow(true);
@@ -170,24 +163,9 @@ function App() {
                     setShowRainbow(false);
                   }}
                 >
-                  <div className="relative z-[9999]">
-                    <div className="w-16 h-16 border-2 border-[#00FF41] rounded-lg overflow-hidden
-                                  bg-black/50 backdrop-blur-sm transition-all duration-300
-                                  group-hover:border-[#00FF41]/80 group-hover:shadow-lg
-                                  group-hover:shadow-[#00FF41]/20">
-                      <div className={`text-4xl font-mono font-bold text-[#00FF41] 
-                                     flex items-center justify-center w-full h-full
-                                     transition-all duration-500 transform
-                                     ${isHovering ? '-translate-y-full' : 'translate-y-0'}`}>
-                        ?
-                      </div>
-                      <div className={`absolute inset-0 text-4xl font-mono font-bold text-[#00FF41]
-                                      flex items-center justify-center transform transition-all duration-500
-                                      ${isHovering ? 'translate-y-0' : 'translate-y-full'}`}>
-                        ?
-                      </div>
-                    </div>
-                  </div>
+                  <span className="text-4xl font-mono font-bold text-[#00FF41] pointer-events-none">
+                    ?
+                  </span>
                 </a>
               </div>
             </div>
