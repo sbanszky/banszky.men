@@ -42,7 +42,7 @@ export const BlueEyeBackground = () => {
     const initializeSynapses = () => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
 
       synapsesRef.current = Array.from({ length: 60 }, (_, i) => {
         const angle = (i / 60) * Math.PI * 2;
@@ -86,7 +86,7 @@ export const BlueEyeBackground = () => {
     const isInsideEye = (x: number, y: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
       const eyeRadiusX = baseRadius;
       const eyeRadiusY = baseRadius * 0.6;
       
@@ -99,7 +99,7 @@ export const BlueEyeBackground = () => {
     const drawEyeStructure = (ctx: CanvasRenderingContext2D, time: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
       const eyeRadiusX = baseRadius;
       const eyeRadiusY = baseRadius * 0.6; // More natural eye shape
 
@@ -201,7 +201,7 @@ export const BlueEyeBackground = () => {
           const centerX = canvas.width / 2;
           const centerY = canvas.height / 2;
           const angle = Math.atan2(synapse.y - centerY, synapse.x - centerX);
-          const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+          const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
           const eyeRadiusX = baseRadius;
           const eyeRadiusY = baseRadius * 0.6;
           
