@@ -29,6 +29,7 @@ interface EyeState {
   pupilY: number;
   lookDirection: { x: number; y: number };
   lookChangeTime: number;
+  blinkScale: number;
 }
 export const BlueEyeBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -41,7 +42,8 @@ export const BlueEyeBackground = () => {
     pupilX: 0,
     pupilY: 0,
     lookDirection: { x: 0, y: 0 },
-    lookChangeTime: Date.now() + 1000
+    lookChangeTime: Date.now() + 1000,
+    blinkScale: 1
   });
 
   useEffect(() => {
@@ -109,15 +111,7 @@ export const BlueEyeBackground = () => {
       const eyeRadiusY = baseRadius * 0.6;
       const eyeState = eyeStateRef.current;
       
-      // Calculate blink effect
-      let blinkScale = 1;
-      if (eyeState.isBlinking) {
-        // Create smooth blink animation (close and open)
-        const blinkCurve = eyeState.blinkProgress < 0.5 
-          ? eyeState.blinkProgress * 2 
-          : (1 - eyeState.blinkProgress) * 2;
-        blinkScale = 1 - (blinkCurve * 0.95); // Almost complete closure
-      }
+      const blinkScale = eyeState.blinkScale;
       
       const normalizedX = (x - centerX) / eyeRadiusX;
       const normalizedY = (y - centerY) / eyeRadiusY;
@@ -144,6 +138,17 @@ export const BlueEyeBackground = () => {
         }
       }
       
+      // Calculate blink scale
+      let blinkScale = 1;
+      if (eyeState.isBlinking) {
+        // Create smooth blink animation (close and open)
+        const blinkCurve = eyeState.blinkProgress < 0.5 
+          ? eyeState.blinkProgress * 2 
+          : (1 - eyeState.blinkProgress) * 2;
+        blinkScale = 1 - (blinkCurve * 0.95); // Almost complete closure
+      }
+      eyeState.blinkScale = blinkScale;
+      
       // Handle looking around
       if (time > eyeState.lookChangeTime) {
         eyeState.lookDirection.x = (Math.random() - 0.5) * 0.6;
@@ -164,6 +169,8 @@ export const BlueEyeBackground = () => {
       const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
       const eyeRadiusX = baseRadius;
       const eyeRadiusY = baseRadius * 0.6; // More natural eye shape
+      const eyeState = eyeStateRef.current;
+      const blinkScale = eyeState.blinkScale;
 
       // Outer eye glow
       const outerGlow = ctx.createRadialGradient(
