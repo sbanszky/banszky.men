@@ -42,13 +42,13 @@ export const BlueEyeBackground = () => {
     const initializeSynapses = () => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const eyeRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
 
       synapsesRef.current = Array.from({ length: 60 }, (_, i) => {
         const angle = (i / 60) * Math.PI * 2;
         const radiusVariation = 0.7 + Math.random() * 0.6;
-        const x = centerX + Math.cos(angle) * eyeRadius * radiusVariation;
-        const y = centerY + Math.sin(angle) * eyeRadius * radiusVariation * 0.8; // Slightly oval
+        const x = centerX + Math.cos(angle) * baseRadius * radiusVariation;
+        const y = centerY + Math.sin(angle) * baseRadius * radiusVariation * 0.6; // Match eye shape
 
         return {
           x,
@@ -74,7 +74,7 @@ export const BlueEyeBackground = () => {
               synapse.x - synapsesRef.current[target].x,
               synapse.y - synapsesRef.current[target].y
             );
-            if (distance < 200) {
+            if (distance < 180) {
               connections.add(target);
             }
           }
@@ -86,8 +86,9 @@ export const BlueEyeBackground = () => {
     const isInsideEye = (x: number, y: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.4;
-      const eyeRadiusY = eyeRadiusX * 0.7;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const eyeRadiusX = baseRadius;
+      const eyeRadiusY = baseRadius * 0.6;
       
       const normalizedX = (x - centerX) / eyeRadiusX;
       const normalizedY = (y - centerY) / eyeRadiusY;
@@ -98,50 +99,54 @@ export const BlueEyeBackground = () => {
     const drawEyeStructure = (ctx: CanvasRenderingContext2D, time: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.4;
-      const eyeRadiusY = eyeRadiusX * 0.7;
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+      const eyeRadiusX = baseRadius;
+      const eyeRadiusY = baseRadius * 0.6; // More natural eye shape
 
       // Outer eye glow
       const outerGlow = ctx.createRadialGradient(
-        centerX, centerY, eyeRadiusX * 0.5,
-        centerX, centerY, eyeRadiusX * 1.2
+        centerX, centerY, baseRadius * 0.3,
+        centerX, centerY, baseRadius * 1.1
       );
-      outerGlow.addColorStop(0, 'rgba(30, 144, 255, 0.15)');
+      outerGlow.addColorStop(0, 'rgba(30, 144, 255, 0.12)');
       outerGlow.addColorStop(1, 'rgba(30, 144, 255, 0)');
       
       ctx.save();
+      ctx.translate(centerX, centerY);
       ctx.scale(1, eyeRadiusY / eyeRadiusX);
       ctx.beginPath();
-      ctx.arc(centerX, centerY * (eyeRadiusX / eyeRadiusY), eyeRadiusX * 1.2, 0, Math.PI * 2);
+      ctx.arc(0, 0, baseRadius * 1.1, 0, Math.PI * 2);
       ctx.fillStyle = outerGlow;
       ctx.fill();
       ctx.restore();
 
       // Iris with dynamic patterns
-      const irisRadius = eyeRadiusX * 0.6;
+      const irisRadius = baseRadius * 0.55;
       const iris = ctx.createRadialGradient(
         centerX, centerY, irisRadius * 0.2,
         centerX, centerY, irisRadius
       );
       
       const pulseIntensity = 0.8 + Math.sin(time * 0.003) * 0.2;
-      iris.addColorStop(0, `rgba(100, 149, 237, ${pulseIntensity})`);
-      iris.addColorStop(0.3, `rgba(65, 105, 225, ${pulseIntensity * 0.9})`);
-      iris.addColorStop(0.7, `rgba(30, 144, 255, ${pulseIntensity * 0.7})`);
-      iris.addColorStop(1, `rgba(0, 100, 200, ${pulseIntensity * 0.5})`);
+      iris.addColorStop(0, `rgba(135, 206, 250, ${pulseIntensity * 0.9})`);
+      iris.addColorStop(0.2, `rgba(100, 149, 237, ${pulseIntensity * 0.8})`);
+      iris.addColorStop(0.5, `rgba(65, 105, 225, ${pulseIntensity * 0.7})`);
+      iris.addColorStop(0.8, `rgba(30, 144, 255, ${pulseIntensity * 0.6})`);
+      iris.addColorStop(1, `rgba(0, 100, 200, ${pulseIntensity * 0.4})`);
       
       ctx.save();
+      ctx.translate(centerX, centerY);
       ctx.scale(1, eyeRadiusY / eyeRadiusX);
       ctx.beginPath();
-      ctx.arc(centerX, centerY * (eyeRadiusX / eyeRadiusY), irisRadius, 0, Math.PI * 2);
+      ctx.arc(0, 0, irisRadius, 0, Math.PI * 2);
       ctx.fillStyle = iris;
       ctx.fill();
       ctx.restore();
 
       // Pupil with subtle movement
-      const pupilRadius = irisRadius * 0.3;
-      const pupilOffsetX = Math.sin(time * 0.0008) * 5;
-      const pupilOffsetY = Math.cos(time * 0.0012) * 3;
+      const pupilRadius = irisRadius * 0.35;
+      const pupilOffsetX = Math.sin(time * 0.0005) * 3;
+      const pupilOffsetY = Math.cos(time * 0.0008) * 2;
       
       ctx.beginPath();
       ctx.arc(
@@ -151,19 +156,19 @@ export const BlueEyeBackground = () => {
         0,
         Math.PI * 2
       );
-      ctx.fillStyle = 'rgba(0, 0, 50, 0.95)';
+      ctx.fillStyle = 'rgba(0, 0, 30, 0.98)';
       ctx.fill();
 
       // Inner pupil reflection
       ctx.beginPath();
       ctx.arc(
-        centerX + pupilOffsetX - pupilRadius * 0.3,
-        centerY + pupilOffsetY - pupilRadius * 0.3,
-        pupilRadius * 0.2,
+        centerX + pupilOffsetX - pupilRadius * 0.25,
+        centerY + pupilOffsetY - pupilRadius * 0.25,
+        pupilRadius * 0.15,
         0,
         Math.PI * 2
       );
-      ctx.fillStyle = 'rgba(150, 200, 255, 0.4)';
+      ctx.fillStyle = 'rgba(200, 230, 255, 0.6)';
       ctx.fill();
     };
 
@@ -196,8 +201,9 @@ export const BlueEyeBackground = () => {
           const centerX = canvas.width / 2;
           const centerY = canvas.height / 2;
           const angle = Math.atan2(synapse.y - centerY, synapse.x - centerX);
-          const eyeRadiusX = Math.min(canvas.width, canvas.height) * 0.35;
-          const eyeRadiusY = eyeRadiusX * 0.7;
+          const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+          const eyeRadiusX = baseRadius;
+          const eyeRadiusY = baseRadius * 0.6;
           
           synapse.x = centerX + Math.cos(angle) * eyeRadiusX * 0.9;
           synapse.y = centerY + Math.sin(angle) * eyeRadiusY * 0.9;
