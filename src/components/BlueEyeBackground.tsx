@@ -21,10 +21,28 @@ interface NeuralPulse {
   hue: number;
 }
 
+interface EyeState {
+  blinkProgress: number;
+  isBlinking: boolean;
+  nextBlinkTime: number;
+  pupilX: number;
+  pupilY: number;
+  lookDirection: { x: number; y: number };
+  lookChangeTime: number;
+}
 export const BlueEyeBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const synapsesRef = useRef<Synapse[]>([]);
   const pulsesRef = useRef<NeuralPulse[]>([]);
+  const eyeStateRef = useRef<EyeState>({
+    blinkProgress: 0,
+    isBlinking: false,
+    nextBlinkTime: Date.now() + 2000 + Math.random() * 3000,
+    pupilX: 0,
+    pupilY: 0,
+    lookDirection: { x: 0, y: 0 },
+    lookChangeTime: Date.now() + 1000
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,11 +107,55 @@ export const BlueEyeBackground = () => {
       const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
       const eyeRadiusX = baseRadius;
       const eyeRadiusY = baseRadius * 0.6;
+      const eyeState = eyeStateRef.current;
+      
+      // Calculate blink effect
+      let blinkScale = 1;
+      if (eyeState.isBlinking) {
+        // Create smooth blink animation (close and open)
+        const blinkCurve = eyeState.blinkProgress < 0.5 
+          ? eyeState.blinkProgress * 2 
+          : (1 - eyeState.blinkProgress) * 2;
+        blinkScale = 1 - (blinkCurve * 0.95); // Almost complete closure
+      }
       
       const normalizedX = (x - centerX) / eyeRadiusX;
       const normalizedY = (y - centerY) / eyeRadiusY;
       
       return (normalizedX * normalizedX + normalizedY * normalizedY) <= 1;
+    };
+
+    const updateEyeState = (time: number) => {
+      const eyeState = eyeStateRef.current;
+      
+      // Handle blinking
+      if (!eyeState.isBlinking && time > eyeState.nextBlinkTime) {
+        eyeState.isBlinking = true;
+        eyeState.blinkProgress = 0;
+      }
+      
+      if (eyeState.isBlinking) {
+        eyeState.blinkProgress += 0.15; // Blink speed
+        if (eyeState.blinkProgress >= 1) {
+          eyeState.isBlinking = false;
+          eyeState.blinkProgress = 0;
+          // Schedule next blink (2-8 seconds)
+          eyeState.nextBlinkTime = time + 2000 + Math.random() * 6000;
+        }
+      }
+      
+      // Handle looking around
+      if (time > eyeState.lookChangeTime) {
+        eyeState.lookDirection.x = (Math.random() - 0.5) * 0.6;
+        eyeState.lookDirection.y = (Math.random() - 0.5) * 0.4;
+        eyeState.lookChangeTime = time + 1500 + Math.random() * 3000;
+      }
+      
+      // Smooth pupil movement
+      const targetX = eyeState.lookDirection.x * 15;
+      const targetY = eyeState.lookDirection.y * 10;
+      eyeState.pupilX += (targetX - eyeState.pupilX) * 0.02;
+      eyeState.pupilY += (targetY - eyeState.pupilY) * 0.02;
     };
 
     const drawEyeStructure = (ctx: CanvasRenderingContext2D, time: number) => {
@@ -113,7 +175,7 @@ export const BlueEyeBackground = () => {
       
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.scale(1, eyeRadiusY / eyeRadiusX);
+      ctx.scale(1, (eyeRadiusY / eyeRadiusX) * blinkScale);
       ctx.beginPath();
       ctx.arc(0, 0, baseRadius * 1.1, 0, Math.PI * 2);
       ctx.fillStyle = outerGlow;
@@ -136,7 +198,7 @@ export const BlueEyeBackground = () => {
       
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.scale(1, eyeRadiusY / eyeRadiusX);
+      ctx.scale(1, (eyeRadiusY / eyeRadiusX) * blinkScale);
       ctx.beginPath();
       ctx.arc(0, 0, irisRadius, 0, Math.PI * 2);
       ctx.fillStyle = iris;
@@ -145,13 +207,16 @@ export const BlueEyeBackground = () => {
 
       // Pupil with subtle movement
       const pupilRadius = irisRadius * 0.35;
-      const pupilOffsetX = Math.sin(time * 0.0005) * 3;
-      const pupilOffsetY = Math.cos(time * 0.0008) * 2;
+      const pupilOffsetX = eyeState.pupilX;
+      const pupilOffsetY = eyeState.pupilY;
       
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.scale(1, blinkScale);
       ctx.beginPath();
       ctx.arc(
-        centerX + pupilOffsetX,
-        centerY + pupilOffsetY,
+        pupilOffsetX,
+        pupilOffsetY,
         pupilRadius,
         0,
         Math.PI * 2
@@ -162,14 +227,35 @@ export const BlueEyeBackground = () => {
       // Inner pupil reflection
       ctx.beginPath();
       ctx.arc(
-        centerX + pupilOffsetX - pupilRadius * 0.25,
-        centerY + pupilOffsetY - pupilRadius * 0.25,
+        pupilOffsetX - pupilRadius * 0.25,
+        pupilOffsetY - pupilRadius * 0.25,
         pupilRadius * 0.15,
         0,
         Math.PI * 2
       );
       ctx.fillStyle = 'rgba(200, 230, 255, 0.6)';
       ctx.fill();
+      ctx.restore();
+      
+      // Draw eyelids during blink
+      if (eyeState.isBlinking && blinkScale < 0.3) {
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        
+        // Upper eyelid
+        ctx.beginPath();
+        ctx.ellipse(0, -eyeRadiusY * (1 - blinkScale * 2), eyeRadiusX, eyeRadiusY * 0.3, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(20, 20, 40, 0.9)';
+        ctx.fill();
+        
+        // Lower eyelid
+        ctx.beginPath();
+        ctx.ellipse(0, eyeRadiusY * (1 - blinkScale * 2), eyeRadiusX, eyeRadiusY * 0.3, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(20, 20, 40, 0.9)';
+        ctx.fill();
+        
+        ctx.restore();
+      }
     };
 
     const createNeuralPulse = (fromIndex: number, toIndex: number) => {
@@ -315,6 +401,7 @@ export const BlueEyeBackground = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      updateEyeState(time);
       drawEyeStructure(ctx, time);
       updateSynapses(time);
       updatePulses();
