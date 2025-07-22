@@ -1,4 +1,4 @@
-import { Activity, Heart } from 'lucide-react';
+import { Activity } from 'lucide-react';
 import { NetworkStat } from '../types';
 
 export const networkStats: NetworkStat[] = [

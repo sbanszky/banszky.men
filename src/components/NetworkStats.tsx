@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Heart } from 'lucide-react';
-import { NetworkStat } from '../types';
 
 const animations = [
   'animate-bw',
@@ -19,7 +18,7 @@ export const NetworkStats = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const networkStats: NetworkStat[] = [
+  const networkStats = [
     { 
       icon: Activity, 
       label: 'Network Status', 
