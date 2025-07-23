@@ -43,7 +43,7 @@ export const Ipv6Matrix = () => {
     const colors: string[] = new Array(columns).fill('').map(getRandomColor);
 
     let lastFrame = 0;
-    const frameInterval = 50; // Controls animation speed (higher = slower)
+    const frameInterval = 100; // Increased interval to reduce CPU usage
 
     const draw = (timestamp: number) => {
       if (timestamp - lastFrame < frameInterval) {
@@ -52,14 +52,14 @@ export const Ipv6Matrix = () => {
       }
       lastFrame = timestamp;
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Reduced fade effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Increased fade for better performance
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < drops.length; i++) {
-        if (Math.random() < 0.02) { // Reduced frequency of IPv6 address changes
+        if (Math.random() < 0.01) { // Further reduced frequency
           ipv6Addresses[i] = generateIpv6();
         }
-        if (Math.random() < 0.005) { // Reduced frequency of color changes
+        if (Math.random() < 0.002) { // Further reduced frequency
           colors[i] = getRandomColor();
         }
 

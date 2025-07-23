@@ -78,10 +78,10 @@ export const FloatingIcons = () => {
     };
 
     const interval = setInterval(() => {
-      if (Math.random() < 0.5) {
+      if (Math.random() < 0.3) { // Reduced frequency
         createNewIcon();
       }
-    }, 5000);
+    }, 8000); // Increased interval
 
     let animationFrame: number;
     const animate = () => {
@@ -89,7 +89,7 @@ export const FloatingIcons = () => {
         if (!prev) return null;
         return {
           ...prev,
-          vibrationOffset: prev.vibrationOffset + prev.vibrationSpeed * 0.02
+          vibrationOffset: prev.vibrationOffset + prev.vibrationSpeed * 0.01 // Reduced vibration speed
         };
       });
       animationFrame = requestAnimationFrame(animate);

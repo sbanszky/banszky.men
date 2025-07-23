@@ -122,10 +122,10 @@ export const useMatrixEffect = (canvasRef: React.RefObject<HTMLCanvasElement>) =
     });
 
     const drawParticles = (timestamp: number) => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Increased fade for better performance
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const timeOffset = timestamp * 0.0005; // Slower time progression
+      const timeOffset = timestamp * 0.0003; // Even slower time progression
 
       // Update particle states with gentle AI behavior
       particles.forEach((particle, i) => {
@@ -170,8 +170,8 @@ export const useMatrixEffect = (canvasRef: React.RefObject<HTMLCanvasElement>) =
             const hue1 = (timeOffset * 15 + particle.emotion * 40) % 360;
             const hue2 = (hue1 + 40) % 360;
             
-            gradient.addColorStop(0, `hsla(${hue1}, 90%, 60%, ${strength * 0.25})`);
-            gradient.addColorStop(1, `hsla(${hue2}, 90%, 60%, ${strength * 0.25})`);
+            gradient.addColorStop(0, `hsla(${hue1}, 90%, 60%, ${strength * 0.15})`); // Reduced opacity
+            gradient.addColorStop(1, `hsla(${hue2}, 90%, 60%, ${strength * 0.15})`);
 
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
@@ -245,7 +245,7 @@ export const useMatrixEffect = (canvasRef: React.RefObject<HTMLCanvasElement>) =
         Math.min(canvas.width, canvas.height) * 0.65
       );
 
-      const pulseIntensity = 0.03 + Math.sin(timeOffset) * 0.015;
+      const pulseIntensity = 0.02 + Math.sin(timeOffset) * 0.01; // Reduced intensity
       atmosphereGlow.addColorStop(0, 'rgba(0, 255, 65, 0)');
       atmosphereGlow.addColorStop(0.5, `rgba(0, 255, 65, ${pulseIntensity})`);
       atmosphereGlow.addColorStop(1, 'rgba(0, 255, 65, 0)');

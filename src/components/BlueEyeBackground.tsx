@@ -286,7 +286,7 @@ export const BlueEyeBackground = () => {
         }
 
         // Create neural pulses occasionally
-        if (Math.random() < synapse.intelligence * 0.02) {
+        if (Math.random() < synapse.intelligence * 0.005) { // Reduced frequency
           if (synapse.connections.length > 0) {
             const targetIndex = synapse.connections[
               Math.floor(Math.random() * synapse.connections.length)
@@ -306,6 +306,11 @@ export const BlueEyeBackground = () => {
           y: pulse.y + (pulse.targetY - pulse.y) * 0.02
         }))
         .filter(pulse => pulse.progress < 1);
+      
+      // Limit maximum pulses to prevent memory issues
+      if (pulsesRef.current.length > 50) {
+        pulsesRef.current = pulsesRef.current.slice(-30);
+      }
     };
 
     const drawConnections = (ctx: CanvasRenderingContext2D, time: number) => {
@@ -378,8 +383,11 @@ export const BlueEyeBackground = () => {
     };
 
     const animate = (time: number) => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Only clear if we have significant changes
+      if (time % 100 < 16) { // Clear every ~100ms instead of every frame
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
 
       updateEyeState(time);
       drawEyeStructure(ctx, time);
