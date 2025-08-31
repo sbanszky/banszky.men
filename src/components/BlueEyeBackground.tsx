@@ -46,6 +46,7 @@ export const BlueEyeBackground = () => {
     lookChangeTime: Date.now() + 1000,
     blinkScale: 1
   });
+  const animationRef = useRef<number>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -63,39 +64,39 @@ export const BlueEyeBackground = () => {
     const initializeSynapses = () => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
 
-      synapsesRef.current = Array.from({ length: 60 }, (_, i) => {
-        const angle = (i / 60) * Math.PI * 2;
+      synapsesRef.current = Array.from({ length: 30 }, (_, i) => {
+        const angle = (i / 30) * Math.PI * 2;
         const radiusVariation = 0.7 + Math.random() * 0.6;
         const x = centerX + Math.cos(angle) * baseRadius * radiusVariation;
-        const y = centerY + Math.sin(angle) * baseRadius * radiusVariation * 0.6; // Match eye shape
+        const y = centerY + Math.sin(angle) * baseRadius * radiusVariation * 0.6;
 
         return {
           x,
           y,
-          dx: (Math.random() - 0.5) * 0.3,
-          dy: (Math.random() - 0.5) * 0.3,
-          size: 2 + Math.random() * 4,
+          dx: (Math.random() - 0.5) * 0.1,
+          dy: (Math.random() - 0.5) * 0.1,
+          size: 2 + Math.random() * 3,
           pulse: Math.random() * Math.PI * 2,
           intelligence: 0.3 + Math.random() * 0.7,
           connections: []
         };
       });
 
-      // Create intelligent connections
+      // Create connections
       synapsesRef.current.forEach((synapse, i) => {
-        const numConnections = Math.floor(synapse.intelligence * 4) + 1;
+        const numConnections = Math.floor(synapse.intelligence * 3) + 1;
         const connections = new Set<number>();
         
-        while (connections.size < numConnections) {
+        while (connections.size < numConnections && connections.size < 3) {
           const target = Math.floor(Math.random() * synapsesRef.current.length);
           if (target !== i) {
             const distance = Math.hypot(
               synapse.x - synapsesRef.current[target].x,
               synapse.y - synapsesRef.current[target].y
             );
-            if (distance < 180) {
+            if (distance < 120) {
               connections.add(target);
             }
           }
@@ -107,11 +108,9 @@ export const BlueEyeBackground = () => {
     const isInsideEye = (x: number, y: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
       const eyeRadiusX = baseRadius;
       const eyeRadiusY = baseRadius * 0.6;
-      const eyeState = eyeStateRef.current;
-      const blinkScale = eyeState.blinkScale;
       const normalizedX = (x - centerX) / eyeRadiusX;
       const normalizedY = (y - centerY) / eyeRadiusY;
       return (normalizedX * normalizedX + normalizedY * normalizedY) <= 1;
@@ -119,39 +118,38 @@ export const BlueEyeBackground = () => {
 
     const updateEyeState = (time: number) => {
       const eyeState = eyeStateRef.current;
-      // Handle blinking
+      
       if (!eyeState.isBlinking && time > eyeState.nextBlinkTime) {
         eyeState.isBlinking = true;
         eyeState.blinkProgress = 0;
       }
+      
       if (eyeState.isBlinking) {
-        eyeState.blinkProgress += 0.15; // Blink speed
+        eyeState.blinkProgress += 0.1;
         if (eyeState.blinkProgress >= 1) {
           eyeState.isBlinking = false;
           eyeState.blinkProgress = 0;
-          // Schedule next blink (2-8 seconds)
-          eyeState.nextBlinkTime = time + 2000 + Math.random() * 6000;
+          eyeState.nextBlinkTime = time + 3000 + Math.random() * 5000;
         }
       }
-      // Calculate blink scale
+      
       let blinkScale = 1;
       if (eyeState.isBlinking) {
-        // Create smooth blink animation (close and open)
         const blinkCurve = eyeState.blinkProgress < 0.5 
           ? eyeState.blinkProgress * 2 
           : (1 - eyeState.blinkProgress) * 2;
-        blinkScale = 1 - (blinkCurve * 0.95); // Almost complete closure
+        blinkScale = 1 - (blinkCurve * 0.9);
       }
       eyeState.blinkScale = blinkScale;
-      // Handle looking around
+      
       if (time > eyeState.lookChangeTime) {
-        eyeState.lookDirection.x = (Math.random() - 0.5) * 0.6;
-        eyeState.lookDirection.y = (Math.random() - 0.5) * 0.4;
-        eyeState.lookChangeTime = time + 1500 + Math.random() * 3000;
+        eyeState.lookDirection.x = (Math.random() - 0.5) * 0.4;
+        eyeState.lookDirection.y = (Math.random() - 0.5) * 0.3;
+        eyeState.lookChangeTime = time + 2000 + Math.random() * 4000;
       }
-      // Smooth pupil movement
-      const targetX = eyeState.lookDirection.x * 15;
-      const targetY = eyeState.lookDirection.y * 10;
+      
+      const targetX = eyeState.lookDirection.x * 10;
+      const targetY = eyeState.lookDirection.y * 8;
       eyeState.pupilX += (targetX - eyeState.pupilX) * 0.02;
       eyeState.pupilY += (targetY - eyeState.pupilY) * 0.02;
     };
@@ -159,9 +157,9 @@ export const BlueEyeBackground = () => {
     const drawEyeStructure = (ctx: CanvasRenderingContext2D, time: number) => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
+      const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
       const eyeRadiusX = baseRadius;
-      const eyeRadiusY = baseRadius * 0.6; // More natural eye shape
+      const eyeRadiusY = baseRadius * 0.6;
       const eyeState = eyeStateRef.current;
       const blinkScale = eyeState.blinkScale;
 
@@ -170,8 +168,9 @@ export const BlueEyeBackground = () => {
         centerX, centerY, baseRadius * 0.3,
         centerX, centerY, baseRadius * 1.1
       );
-      outerGlow.addColorStop(0, 'rgba(30, 144, 255, 0.12)');
+      outerGlow.addColorStop(0, 'rgba(30, 144, 255, 0.08)');
       outerGlow.addColorStop(1, 'rgba(30, 144, 255, 0)');
+      
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.scale(1, (eyeRadiusY / eyeRadiusX) * blinkScale);
@@ -181,18 +180,17 @@ export const BlueEyeBackground = () => {
       ctx.fill();
       ctx.restore();
 
-      // Iris with dynamic patterns
+      // Iris
       const irisRadius = baseRadius * 0.55;
       const iris = ctx.createRadialGradient(
         centerX, centerY, irisRadius * 0.2,
         centerX, centerY, irisRadius
       );
-      const pulseIntensity = 0.8 + Math.sin(time * 0.003) * 0.2;
-      iris.addColorStop(0, `rgba(135, 206, 250, ${pulseIntensity * 0.9})`);
-      iris.addColorStop(0.2, `rgba(100, 149, 237, ${pulseIntensity * 0.8})`);
-      iris.addColorStop(0.5, `rgba(65, 105, 225, ${pulseIntensity * 0.7})`);
-      iris.addColorStop(0.8, `rgba(30, 144, 255, ${pulseIntensity * 0.6})`);
-      iris.addColorStop(1, `rgba(0, 100, 200, ${pulseIntensity * 0.4})`);
+      const pulseIntensity = 0.6 + Math.sin(time * 0.002) * 0.2;
+      iris.addColorStop(0, `rgba(135, 206, 250, ${pulseIntensity * 0.7})`);
+      iris.addColorStop(0.5, `rgba(65, 105, 225, ${pulseIntensity * 0.5})`);
+      iris.addColorStop(1, `rgba(30, 144, 255, ${pulseIntensity * 0.3})`);
+      
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.scale(1, (eyeRadiusY / eyeRadiusX) * blinkScale);
@@ -202,57 +200,37 @@ export const BlueEyeBackground = () => {
       ctx.fill();
       ctx.restore();
 
-      // Pupil with subtle movement
+      // Pupil
       const pupilRadius = irisRadius * 0.35;
-      const pupilOffsetX = eyeState.pupilX;
-      const pupilOffsetY = eyeState.pupilY;
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.scale(1, blinkScale);
       ctx.beginPath();
-      ctx.arc(
-        pupilOffsetX,
-        pupilOffsetY,
-        pupilRadius,
-        0,
-        Math.PI * 2
-      );
-      ctx.fillStyle = 'rgba(0, 0, 30, 0.98)';
+      ctx.arc(eyeState.pupilX, eyeState.pupilY, pupilRadius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 30, 0.95)';
       ctx.fill();
 
-      // Inner pupil reflection
+      // Pupil reflection
       ctx.beginPath();
       ctx.arc(
-        pupilOffsetX - pupilRadius * 0.25,
-        pupilOffsetY - pupilRadius * 0.25,
+        eyeState.pupilX - pupilRadius * 0.25,
+        eyeState.pupilY - pupilRadius * 0.25,
         pupilRadius * 0.15,
         0,
         Math.PI * 2
       );
-      ctx.fillStyle = 'rgba(200, 230, 255, 0.6)';
+      ctx.fillStyle = 'rgba(200, 230, 255, 0.4)';
       ctx.fill();
       ctx.restore();
-      // Draw eyelids during blink
-      if (eyeState.isBlinking && blinkScale < 0.3) {
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        // Upper eyelid
-        ctx.beginPath();
-        ctx.ellipse(0, -eyeRadiusY * (1 - blinkScale * 2), eyeRadiusX, eyeRadiusY * 0.3, 0, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(20, 20, 40, 0.9)';
-        ctx.fill();
-        // Lower eyelid
-        ctx.beginPath();
-        ctx.ellipse(0, eyeRadiusY * (1 - blinkScale * 2), eyeRadiusX, eyeRadiusY * 0.3, 0, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(20, 20, 40, 0.9)';
-        ctx.fill();
-        ctx.restore();
-      }
     };
 
     const createNeuralPulse = (fromIndex: number, toIndex: number) => {
+      if (pulsesRef.current.length >= 20) return; // Limit pulses
+      
       const from = synapsesRef.current[fromIndex];
       const to = synapsesRef.current[toIndex];
+      if (!from || !to) return;
+      
       pulsesRef.current.push({
         x: from.x,
         y: from.y,
@@ -266,27 +244,22 @@ export const BlueEyeBackground = () => {
 
     const updateSynapses = (time: number) => {
       synapsesRef.current.forEach((synapse, i) => {
-        // Update pulse
-        synapse.pulse += 0.03;
-        // Gentle movement
+        synapse.pulse += 0.02;
         synapse.x += synapse.dx;
         synapse.y += synapse.dy;
-        // Keep synapses within eye boundary
+        
         if (!isInsideEye(synapse.x, synapse.y)) {
           const centerX = canvas.width / 2;
           const centerY = canvas.height / 2;
           const angle = Math.atan2(synapse.y - centerY, synapse.x - centerX);
-          const baseRadius = Math.min(canvas.width, canvas.height) * 0.49; // Increased by 40% (0.35 * 1.4)
-          const eyeRadiusX = baseRadius;
-          const eyeRadiusY = baseRadius * 0.6;
-          synapse.x = centerX + Math.cos(angle) * eyeRadiusX * 0.9;
-          synapse.y = centerY + Math.sin(angle) * eyeRadiusY * 0.9;
+          const baseRadius = Math.min(canvas.width, canvas.height) * 0.35;
+          synapse.x = centerX + Math.cos(angle) * baseRadius * 0.8;
+          synapse.y = centerY + Math.sin(angle) * baseRadius * 0.8 * 0.6;
           synapse.dx *= -0.5;
           synapse.dy *= -0.5;
         }
 
-        // Create neural pulses occasionally
-        if (Math.random() < synapse.intelligence * 0.005) { // Reduced frequency
+        if (Math.random() < 0.002) { // Reduced frequency
           if (synapse.connections.length > 0) {
             const targetIndex = synapse.connections[
               Math.floor(Math.random() * synapse.connections.length)
@@ -301,41 +274,29 @@ export const BlueEyeBackground = () => {
       pulsesRef.current = pulsesRef.current
         .map(pulse => ({
           ...pulse,
-          progress: pulse.progress + 0.02,
-          x: pulse.x + (pulse.targetX - pulse.x) * 0.02,
-          y: pulse.y + (pulse.targetY - pulse.y) * 0.02
+          progress: pulse.progress + 0.03,
+          x: pulse.x + (pulse.targetX - pulse.x) * 0.03,
+          y: pulse.y + (pulse.targetY - pulse.y) * 0.03
         }))
         .filter(pulse => pulse.progress < 1);
-      
-      // Limit maximum pulses to prevent memory issues
-      if (pulsesRef.current.length > 50) {
-        pulsesRef.current = pulsesRef.current.slice(-30);
-      }
     };
 
     const drawConnections = (ctx: CanvasRenderingContext2D, time: number) => {
       synapsesRef.current.forEach((synapse, i) => {
         synapse.connections.forEach(targetIndex => {
           const target = synapsesRef.current[targetIndex];
+          if (!target) return;
+          
           const distance = Math.hypot(target.x - synapse.x, target.y - synapse.y);
-          if (distance < 150) {
+          if (distance < 120) {
             const connectionStrength = (synapse.intelligence + target.intelligence) * 0.5;
-            const alpha = (1 - distance / 150) * connectionStrength * 0.15;
-            const gradient = ctx.createLinearGradient(
-              synapse.x, synapse.y, target.x, target.y
-            );
-            gradient.addColorStop(0, `rgba(100, 149, 237, ${alpha})`);
-            gradient.addColorStop(1, `rgba(30, 144, 255, ${alpha})`);
-
+            const alpha = (1 - distance / 120) * connectionStrength * 0.1;
+            
             ctx.beginPath();
             ctx.moveTo(synapse.x, synapse.y);
-            // Add subtle curve to connections
-            const midX = (synapse.x + target.x) / 2;
-            const midY = (synapse.y + target.y) / 2;
-            const curve = Math.sin(time * 0.001 + i) * 10;
-            ctx.quadraticCurveTo(midX + curve, midY - curve, target.x, target.y);
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 0.5 + connectionStrength;
+            ctx.lineTo(target.x, target.y);
+            ctx.strokeStyle = `rgba(100, 149, 237, ${alpha})`;
+            ctx.lineWidth = 0.5 + connectionStrength * 0.5;
             ctx.stroke();
           }
         });
@@ -344,50 +305,56 @@ export const BlueEyeBackground = () => {
 
     const drawSynapses = (ctx: CanvasRenderingContext2D, time: number) => {
       synapsesRef.current.forEach(synapse => {
-        const activity = 0.5 + Math.sin(time * 0.002 + synapse.pulse) * 0.5;
-        const glowSize = synapse.size * 3;
+        const activity = 0.5 + Math.sin(time * 0.001 + synapse.pulse) * 0.5;
+        
         // Synapse glow
         const glow = ctx.createRadialGradient(
           synapse.x, synapse.y, 0,
-          synapse.x, synapse.y, glowSize
+          synapse.x, synapse.y, synapse.size * 2
         );
-        glow.addColorStop(0, `rgba(100, 149, 237, ${activity * synapse.intelligence * 0.4})`);
+        glow.addColorStop(0, `rgba(100, 149, 237, ${activity * synapse.intelligence * 0.3})`);
         glow.addColorStop(1, 'rgba(100, 149, 237, 0)');
+        
         ctx.beginPath();
-        ctx.arc(synapse.x, synapse.y, glowSize, 0, Math.PI * 2);
+        ctx.arc(synapse.x, synapse.y, synapse.size * 2, 0, Math.PI * 2);
         ctx.fillStyle = glow;
         ctx.fill();
 
         // Synapse core
         ctx.beginPath();
         ctx.arc(synapse.x, synapse.y, synapse.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 149, 237, ${activity * synapse.intelligence})`;
+        ctx.fillStyle = `rgba(100, 149, 237, ${activity * synapse.intelligence * 0.8})`;
         ctx.fill();
       });
     };
 
     const drawPulses = (ctx: CanvasRenderingContext2D) => {
       pulsesRef.current.forEach(pulse => {
-        const size = 3 + pulse.intensity * 2;
-        const alpha = (1 - pulse.progress) * pulse.intensity;
+        const size = 2 + pulse.intensity;
+        const alpha = (1 - pulse.progress) * pulse.intensity * 0.6;
+        
         ctx.beginPath();
         ctx.arc(pulse.x, pulse.y, size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${pulse.hue}, 80%, 60%, ${alpha})`;
         ctx.fill();
-        // Pulse trail
-        ctx.beginPath();
-        ctx.arc(pulse.x, pulse.y, size * 2, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${pulse.hue}, 80%, 60%, ${alpha * 0.3})`;
-        ctx.fill();
       });
     };
 
+    let lastFrameTime = 0;
+    const frameInterval = 50; // 20 FPS instead of 60
+
     const animate = (time: number) => {
-      // Only clear if we have significant changes
-      if (time % 100 < 16) { // Clear every ~100ms instead of every frame
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (time - lastFrameTime < frameInterval) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
       }
+      lastFrameTime = time;
+
+      if (!ctx) return;
+
+      // Clear canvas less frequently
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       updateEyeState(time);
       drawEyeStructure(ctx, time);
@@ -397,15 +364,17 @@ export const BlueEyeBackground = () => {
       drawSynapses(ctx, time);
       drawPulses(ctx);
 
-      requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    const animation = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(animation);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
       window.removeEventListener('resize', resizeCanvas);
     };
   }, []);
@@ -413,7 +382,7 @@ export const BlueEyeBackground = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full opacity-40 pointer-events-none"
+      className="fixed top-0 left-0 w-full h-full opacity-30 pointer-events-none"
       style={{ zIndex: 1 }}
     />
   );
