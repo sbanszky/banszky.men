@@ -43,7 +43,7 @@ export const Ipv6Matrix = () => {
     const colors: string[] = new Array(columns).fill('').map(getRandomColor);
 
     let lastFrame = 0;
-    const frameInterval = 200; // Further increased interval
+    const frameInterval = 150; // Balanced performance
 
     const draw = (timestamp: number) => {
       if (timestamp - lastFrame < frameInterval) {
@@ -52,14 +52,14 @@ export const Ipv6Matrix = () => {
       }
       lastFrame = timestamp;
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // More aggressive fade
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < drops.length; i++) {
-        if (Math.random() < 0.005) { // Even more reduced frequency
+        if (Math.random() < 0.01) {
           ipv6Addresses[i] = generateIpv6();
         }
-        if (Math.random() < 0.001) { // Even more reduced frequency
+        if (Math.random() < 0.005) {
           colors[i] = getRandomColor();
         }
 
@@ -70,7 +70,7 @@ export const Ipv6Matrix = () => {
           const opacity = Math.max(0, 1 - (drops[i] * 25 - index * 25) / canvas.height);
           const color = colors[i];
           const [r, g, b] = color.match(/\w\w/g)?.map(x => parseInt(x, 16)) || [0, 255, 65];
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity * 0.05})`; // Further reduced opacity
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity * 0.15})`;
           ctx.font = '14px monospace'; // Slightly smaller font
           ctx.fillText(segment, i * 25, y - index * 25);
         });
@@ -79,7 +79,7 @@ export const Ipv6Matrix = () => {
           drops[i] = 0;
           ipv6Addresses[i] = generateIpv6();
         } else {
-          drops[i] += 0.3; // Further reduced falling speed
+          drops[i] += 0.5;
         }
       }
 
@@ -97,7 +97,7 @@ export const Ipv6Matrix = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full opacity-15 pointer-events-none"
+      className="fixed top-0 left-0 w-full h-full opacity-25 pointer-events-none"
       style={{ zIndex: 2 }}
     />
   );
