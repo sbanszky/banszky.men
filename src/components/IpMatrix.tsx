@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useMatrixEffect } from '../hooks/useMatrixEffect';
 
 export const IpMatrix = () => {
